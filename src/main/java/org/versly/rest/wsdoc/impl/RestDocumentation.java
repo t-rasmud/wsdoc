@@ -16,6 +16,8 @@
 
 package org.versly.rest.wsdoc.impl;
 
+import org.checkerframework.checker.determinism.qual.*;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -403,11 +405,11 @@ public class RestDocumentation implements Serializable {
                  */
                 public UrlFields getMethodSpecificUrlSubstitutions() {
                     Resource parent = _parent;
-                    Map<String, UrlFields.UrlField> methodFields = new HashMap<String, UrlFields.UrlField>(_urlSubstitutions.getFields());
+                    @OrderNonDet Map<String, UrlFields.UrlField> methodFields = new HashMap<String, UrlFields.UrlField>(_urlSubstitutions.getFields());
                     while (parent != null) {
                         Iterator<Method> iter = parent.getRequestMethodDocs().iterator();
                         while (iter.hasNext()) {
-                            for (String key : iter.next()._urlSubstitutions.getFields().keySet()) {
+                            for (@Det String key : iter.next()._urlSubstitutions.getFields().keySet()) {
                                 methodFields.remove(key);
                             }
                         }
@@ -459,7 +461,7 @@ public class RestDocumentation implements Serializable {
                  */
                 public String getKey() {
                     String key = path + "_" + _meth;
-                    for (String param : _urlParameters.getFields().keySet()) {
+                    for (@Det String param : _urlParameters.getFields().keySet()) {
                         key += "_" + param;
                     }
                     return key;
